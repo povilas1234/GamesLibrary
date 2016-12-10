@@ -76,11 +76,13 @@ public class LoginActivity extends AppCompatActivity {
 
                             if(success){
                                 // cia jeigu grazina daugiau info !
+                                String id = jsonObject.getString("id");
                                 String username = jsonObject.getString("username");
                                 String password = jsonObject.getString("password");
                                 String email = jsonObject.getString("email");
                                 String subscriptions = jsonObject.getString("subscriptions");
 
+                                editor.putString("id", id);
                                 editor.putString("username", username);
                                 editor.putString("password", password);
                                 editor.putString("email", email);

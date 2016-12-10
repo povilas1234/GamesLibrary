@@ -51,9 +51,8 @@ public class GamesAdapter extends BaseAdapter{
     SharedPreferences pref;
     SharedPreferences.Editor editor;
 
-    String id;
     String subscriptions;
-    boolean subscribed;
+    boolean isSubscribed;
 
     public GamesAdapter(List<Game> mGames, Context mContext) {
         this.mGames = mGames;
@@ -81,6 +80,36 @@ public class GamesAdapter extends BaseAdapter{
         return 0;
     }
 
+    private void Subscribe(){
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://gameslibrary.000webhostapp.com/Subscribe.php",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("subscribe", ": successful");
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("subscribe: ", String.valueOf(error));
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("id",pref.getString("id",""));
+                params.put("subscriptions",subscriptions);
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder mainViewholder = null;
@@ -90,47 +119,45 @@ public class GamesAdapter extends BaseAdapter{
             ViewHolder viewHolder = new ViewHolder();
 
             viewHolder.thumbnail = (ImageView) convertView.findViewById(R.id.ivThumbnail);
-            Log.i("imageurl: ", mGames.get(position).description);
             Picasso.with(mContext).load(mGames.get(position).image).into(viewHolder.thumbnail);
+
             viewHolder.name = (TextView) convertView.findViewById(R.id.tvName);
             viewHolder.name.setText(mGames.get(position).name);
+
             viewHolder.description = (TextView) convertView.findViewById(R.id.tvDescription);
             viewHolder.description.setText(mGames.get(position).description);
+
             viewHolder.subscribe = (Button) convertView.findViewById(R.id.bSubscribe);
 
 
-            subscribed = subscriptions.contains(";" + mGames.get(position).id +";");
+            isSubscribed = subscriptions.contains(";" + mGames.get(position).id +";");
 
-            if(subscribed) viewHolder.subscribe.setText("Unsubscribe");
+            if(isSubscribed) viewHolder.subscribe.setText("Unsubscribe");
             else viewHolder.subscribe.setText("Subscribe");
             //Log.i("real: ", String.valueOf(subscribed));
 
             viewHolder.subscribe.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    subscribed = subscriptions.contains(";" + mGames.get(position).id +";");
+                    isSubscribed = subscriptions.contains(";" + mGames.get(position).id +";");
 
                     Log.i("before: ", subscriptions);
 
 
 
-                    if(subscribed){ subscriptions = subscriptions.replace(";"+mGames.get(position).id+";",";");Log.i("is: ", " true");}
+                    if(isSubscribed){ subscriptions = subscriptions.replace(";"+mGames.get(position).id+";",";");Log.i("is: ", " true");}
                     else {subscriptions += mGames.get(position).id+";";Log.i("is: ", " false");}
 
 
                     editor.putString("subscriptions",subscriptions);
                     editor.apply();
 
-                    id = String.valueOf(mGames.get(position).id);
-                    Log.i("id: ", id);
+
                     Subscribe();
 
                     Intent intent = new Intent(mContext, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
-                    //MainActivity.changeSubscription(x);
-                    Log.i("subscriptions: ", subscriptions);
-                    //Subscribe();
                 }
             });
 
@@ -155,34 +182,7 @@ public class GamesAdapter extends BaseAdapter{
 
     }
 
-    private void Subscribe(){
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://gameslibrary.000webhostapp.com/Subscribe.php",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.i("subscribe", ": successful");
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.i("subscribe: ", String.valueOf(error));
-                    }
-                }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                params.put("id",String.valueOf(79));
-                params.put("subscriptions",subscriptions);
-                return params;
-            }
-
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext.getApplicationContext());
-        requestQueue.add(stringRequest);
-    }
 
 
 }

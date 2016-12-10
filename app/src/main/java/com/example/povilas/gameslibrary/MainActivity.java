@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -28,8 +29,13 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -37,6 +43,35 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences pref;
 
 
+
+    /*private void Subscribe(){
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://gameslibrary.000webhostapp.com/Subscribe.php",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("subscribe", ": successful");
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("subscribe: ", String.valueOf(error.getMessage()));
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("id","79");
+                params.put("subscriptions","123");
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+        requestQueue.add(stringRequest);
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +99,8 @@ public class MainActivity extends AppCompatActivity
 
 
 
+
+        //Subscribe();
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);

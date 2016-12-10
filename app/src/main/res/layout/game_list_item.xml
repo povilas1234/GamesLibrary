@@ -5,7 +5,7 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:srcCompat="@drawable/common_full_open_on_phone"
         android:id="@+id/ivThumbnail"
         android:layout_alignParentTop="true"
