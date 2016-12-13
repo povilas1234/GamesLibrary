@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity
         name.setText(pref.getString("username",""));
         email.setText(pref.getString("email",""));
 
+
+        startService(new Intent(this, MyService.class));
     }
 
     @Override

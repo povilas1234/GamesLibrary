@@ -3,6 +3,7 @@ package com.example.povilas.gameslibrary;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -90,6 +91,8 @@ public class GamesFragment extends Fragment {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
+
+
 
 
         requestQueue = Volley.newRequestQueue(getContext());

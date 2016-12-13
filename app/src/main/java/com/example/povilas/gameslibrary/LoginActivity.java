@@ -38,6 +38,9 @@ public class LoginActivity extends AppCompatActivity {
 
         setTitle("Login");
 
+
+        stopService(new Intent(this, MyService.class));
+
         etUsername = (EditText)findViewById(R.id.etUsername);
         etPassword = (EditText)findViewById(R.id.etPassword);
         bLogin = (Button)findViewById(R.id.bLogin);
