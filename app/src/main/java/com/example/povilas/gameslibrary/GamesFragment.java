@@ -66,7 +66,7 @@ public class GamesFragment extends Fragment {
 
             Log.i("PostActivity", games.size() + " posts loaded.");
             for (Game game : games) {
-                Log.i("PostActivity", game.id + ": " + game.image);
+                Log.i("PostActivity: ", game.id + " | " + game.image + " | " + game.name + " | " + game.description);
             }
             progressDialog.dismiss();
 
@@ -86,17 +86,8 @@ public class GamesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_games, container, false);
 
-
-        /*String[] data = {"vienas", "du", "trys"};
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                data
-        );*/
-        //listView.setAdapter(arrayAdapter)
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
 
@@ -105,11 +96,6 @@ public class GamesFragment extends Fragment {
         fetchPosts();
 
         listView = (ListView)view.findViewById(R.id.lvGames);
-        /*for (Game game : games) {
-            Log.i("PostActivity234", game.id + ": " + game.image);
-        }*/
-        //Log.i("PostActivity234", MainActivity.games.get(1).name);
-
         // Inflate the layout for this fragment
         return view;
 
