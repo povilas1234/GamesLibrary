@@ -1,5 +1,6 @@
 package com.example.povilas.gameslibrary;
 
+import android.app.ActivityManager;
 import android.support.v4.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -41,17 +43,21 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     SharedPreferences pref;
-
-    private GoogleMap mMap;
+    FragmentManager ft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +86,6 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
 
-
-
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -93,7 +96,14 @@ public class MainActivity extends AppCompatActivity
         email.setText(pref.getString("email",""));
 
 
-        startService(new Intent(this, MyService.class));
+        if(isServiceRunning("com.example.povilas.gameslibrary.MyService"))
+            Log.i("MyService: ", "Service is already running");
+        else startService(new Intent(this, MyService.class));
+
+        setTitle("News");
+        ft = getSupportFragmentManager();
+        ft.beginTransaction().replace(R.id.content_frame, new NewsFragment()).commit();
+
     }
 
     @Override
@@ -133,10 +143,11 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-       FragmentManager ft = getSupportFragmentManager();
-
-        if (id == R.id.nav_gamesList) {
-            setTitle("Games List");
+        if (id == R.id.nav_news) {
+            setTitle("News");
+            ft.beginTransaction().replace(R.id.content_frame, new NewsFragment()).commit();
+        } if (id == R.id.nav_gamesList) {
+            setTitle("Games");
             ft.beginTransaction().replace(R.id.content_frame, new GamesFragment()).commit();
         } else if (id == R.id.nav_gallery) {
             setTitle("Game shops");
@@ -151,5 +162,15 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private boolean isServiceRunning(String Service) {
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+            if(Service.equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

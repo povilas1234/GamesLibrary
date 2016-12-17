@@ -61,7 +61,7 @@ public class GamesAdapter extends BaseAdapter{
 
 
         pref = mContext.getSharedPreferences("login.conf", Context.MODE_PRIVATE);
-        editor = pref.edit();
+
         subscriptions = pref.getString("subscriptions","");
     }
 
@@ -80,13 +80,25 @@ public class GamesAdapter extends BaseAdapter{
         return 0;
     }
 
-    private void Subscribe(){
+    private void Subscribe(final String str){
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://gameslibrary.000webhostapp.com/Subscribe.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.i("subscribe", ": successful");
+                        editor = pref.edit();
+                        editor.putString("subscriptions",subscriptions);
+                        editor.apply();
+
+                        String msg;
+                        if(!isSubscribed) msg = " successfully subscribed";
+                        else msg = " successfully unsubscribed";
+                        Toast.makeText(mContext, str + msg, Toast.LENGTH_LONG).show();
+
+                        Intent intent = new Intent(mContext, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mContext.startActivity(intent);
                     }
                 },
                 new Response.ErrorListener() {
@@ -112,67 +124,41 @@ public class GamesAdapter extends BaseAdapter{
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder mainViewholder = null;
+        convertView = inflater.inflate(R.layout.game_list_item, null);
+        ViewHolder viewHolder = new ViewHolder();
 
-        if(convertView == null){
-            convertView = inflater.inflate(R.layout.game_list_item, null);
-            ViewHolder viewHolder = new ViewHolder();
+        viewHolder.thumbnail = (ImageView) convertView.findViewById(R.id.ivThumbnail);
+        Picasso.with(mContext).load(mGames.get(position).image).into(viewHolder.thumbnail);
 
-            viewHolder.thumbnail = (ImageView) convertView.findViewById(R.id.ivThumbnail);
-            Picasso.with(mContext).load(mGames.get(position).image).into(viewHolder.thumbnail);
+        viewHolder.name = (TextView) convertView.findViewById(R.id.tvName);
+        viewHolder.name.setText(mGames.get(position).name);
 
-            viewHolder.name = (TextView) convertView.findViewById(R.id.tvName);
-            viewHolder.name.setText(mGames.get(position).name);
+        viewHolder.description = (TextView) convertView.findViewById(R.id.tvDescription);
+        viewHolder.description.setText(mGames.get(position).description);
 
-            viewHolder.description = (TextView) convertView.findViewById(R.id.tvDescription);
-            viewHolder.description.setText(mGames.get(position).description);
-
-            viewHolder.subscribe = (Button) convertView.findViewById(R.id.bSubscribe);
+        viewHolder.subscribe = (Button) convertView.findViewById(R.id.bSubscribe);
 
 
-            isSubscribed = subscriptions.contains(";" + mGames.get(position).id +";");
+        isSubscribed = subscriptions.contains(";" + mGames.get(position).id +";");
 
-            if(isSubscribed) viewHolder.subscribe.setText("Unsubscribe");
-            else viewHolder.subscribe.setText("Subscribe");
-            //Log.i("real: ", String.valueOf(subscribed));
+        if(isSubscribed) viewHolder.subscribe.setText("Unsubscribe");
+        else viewHolder.subscribe.setText("Subscribe");
+        //Log.i("real: ", String.valueOf(subscribed));
 
-            viewHolder.subscribe.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isSubscribed = subscriptions.contains(";" + mGames.get(position).id +";");
+        viewHolder.subscribe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isSubscribed = subscriptions.contains(";" + mGames.get(position).id +";");
 
-                    Log.i("before: ", subscriptions);
+                Log.i("before: ", subscriptions);
 
-
-
-                    if(isSubscribed){ subscriptions = subscriptions.replace(";"+mGames.get(position).id+";",";");Log.i("is: ", " true");}
-                    else {subscriptions += mGames.get(position).id+";";Log.i("is: ", " false");}
+                if(isSubscribed){ subscriptions = subscriptions.replace(";"+mGames.get(position).id+";",";");Log.i("is: ", " true");}
+                else {subscriptions += mGames.get(position).id+";";Log.i("is: ", " false");}
 
 
-                    editor.putString("subscriptions",subscriptions);
-                    editor.apply();
-
-
-                    Subscribe();
-
-                    Intent intent = new Intent(mContext, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mContext.startActivity(intent);
-                }
-            });
-
-
-
-
-
-
-            convertView.setTag(viewHolder);
-        } else {
-            mainViewholder = (ViewHolder) convertView.getTag();
-        }
-
-
-
+                Subscribe(mGames.get(position).name);
+            }
+        });
         return convertView;
     }
     private class ViewHolder{
