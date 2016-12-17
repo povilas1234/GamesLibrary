@@ -1,5 +1,6 @@
 package com.example.povilas.gameslibrary;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,9 +39,6 @@ public class LoginActivity extends AppCompatActivity {
 
         setTitle("Login");
 
-
-        stopService(new Intent(this, MyService.class));
-
         etUsername = (EditText)findViewById(R.id.etUsername);
         etPassword = (EditText)findViewById(R.id.etPassword);
         bLogin = (Button)findViewById(R.id.bLogin);
@@ -49,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         pref = getSharedPreferences("login.conf", Context.MODE_PRIVATE);
         editor = pref.edit();
 
-        if(pref.getString("username","").toString() != "" && pref.getString("password","").toString() != "") {
+        if(!pref.getString("username","").equalsIgnoreCase("")) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             LoginActivity.this.startActivity(intent);

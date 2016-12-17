@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity
             ft.beginTransaction().replace(R.id.content_frame, new MapsFragment()).commit();
         } else if (id == R.id.nav_logout) {
             pref.edit().clear().commit();
+            stopService(new Intent(this, MyService.class));
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             MainActivity.this.startActivity(intent);
