@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class NewsFragment extends Fragment {
 
-    String ENDPOINT = "https://gameslibrary.000webhostapp.com/News.php";
+    String ENDPOINT = "http://gameslibrary.16mb.com/News.php";
     RequestQueue requestQueue;
     Gson gson;
     List<News> news;

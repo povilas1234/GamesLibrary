@@ -48,7 +48,7 @@ public class MyService extends Service {
 
     private void getLatestSubscribedNews(final String date_time){
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://gameslibrary.000webhostapp.com/LatestNews.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://gameslibrary.16mb.com/LatestNews.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -58,7 +58,7 @@ public class MyService extends Service {
 
                             Log.i("News", somethingNew+"");
                             if(somethingNew) {
-                                notification = new NotificationCompat.Builder(getBaseContext());
+                                notification = new NotificationCompat.Builder(getApplicationContext());
                                 notification.setAutoCancel(true);
                                 notificationBuilder();
 
@@ -113,17 +113,16 @@ public class MyService extends Service {
         runnable = new Runnable() {
             @Override
             public void run() {
-                long mili = System.currentTimeMillis();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
-                Date resultDate = new Date(mili);
-                Log.i(TAG, "Time: " + sdf.format(resultDate));
-                getLatestSubscribedNews(sdf.format(resultDate));
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+                Date resultDate = new Date();
+                Log.i(TAG, "Time: " + sdf.format(new Date()));
                 handler.postDelayed(this, 10000);
+                getLatestSubscribedNews(sdf.format(resultDate));
             }
         };
         Thread thread = new Thread(runnable);
         thread.start();
-        return Service.START_STICKY;
+        return START_STICKY;
     }
 
     @Override

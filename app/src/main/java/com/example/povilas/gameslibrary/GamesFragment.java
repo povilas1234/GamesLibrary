@@ -36,7 +36,7 @@ import java.util.zip.Inflater;
  */
 public class GamesFragment extends Fragment {
 
-    String ENDPOINT = "https://gameslibrary.000webhostapp.com/Games.php";
+    String ENDPOINT = "http://gameslibrary.16mb.com/Games.php";
     RequestQueue requestQueue;
     Gson gson;
     List<Game> games;

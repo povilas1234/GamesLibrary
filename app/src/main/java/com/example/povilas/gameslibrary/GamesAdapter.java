@@ -82,7 +82,7 @@ public class GamesAdapter extends BaseAdapter{
 
     private void Subscribe(final String str){
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://gameslibrary.000webhostapp.com/Subscribe.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://gameslibrary.16mb.com/Subscribe.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

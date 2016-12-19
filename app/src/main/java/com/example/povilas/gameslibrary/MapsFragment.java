@@ -50,7 +50,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private static final LocationRequest REQUEST = LocationRequest.create()
             .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
-    private String ENDPOINT = "https://gameslibrary.000webhostapp.com/Shops.php";
+    private String ENDPOINT = "http://gameslibrary.16mb.com/Shops.php";
     private RequestQueue requestQueue;
     private Gson gson;
     private List<Shop> shops;
